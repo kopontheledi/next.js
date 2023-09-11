@@ -44,7 +44,7 @@ const monthInputRef= useRef();
           </select>
         </div>
       </div>
-      <Button></Button>
+      <Button>Find Events</Button>
     </form>
   );
 }
