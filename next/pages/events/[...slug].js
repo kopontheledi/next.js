@@ -5,22 +5,25 @@ import { Fragment } from "react";
 import ResultsTitle from "@/components/events/results-title/results-title";
 import Button from "@/components/ui/button";
 import ErrorAlert from "@/components/ui/error-alert/error-alert";
+import useSWR from 'swr';
 
 export default function FilteredEventsPage(props) {
   const router = useRouter();
 
-  // const filterData = router.query.slug;
+  const filterData = router.query.slug;
 
-  // if (!filterData) {
-  //   return <p className="center">Loading...</p>;
-  // }
+  
 
-  // const filterdYear = filterData[0];
-  // const filteredMonth = filterData[1];
+  if (!filterData) {
+    return <p className="center">Loading...</p>;
+  }
 
-  // //to get numbers from strings (data)
-  // const numYear = +filterdYear;
-  // const numMonth = +filteredMonth;
+  const filterdYear = filterData[0];
+  const filteredMonth = filterData[1];
+
+  //to get numbers from strings (data)
+  const numYear = +filterdYear;
+  const numMonth = +filteredMonth;
 
   if (props.hasErrror) {
     return (
@@ -62,9 +65,10 @@ export default function FilteredEventsPage(props) {
 
 export async function getServerSideprops(context) {
   const { params } = context;
+
   const filterData = params.slug;
 
-  const filterdYear = filterData[0];
+  const filteredYear = filterData[0];
   const filteredMonth = filterData[1];
 
   //to get numbers from strings (data)
@@ -80,22 +84,22 @@ export async function getServerSideprops(context) {
     numMonth > 12
   ) {
     return {
-      props: { hasErrror: true }
+      props: { hasErrror: true },
     };
   }
 
-  const filteredEvents = await getFilteredEvents ({
+  const filteredEvents = await getFilteredEvents({
     year: numYear,
     month: numMonth,
   });
 
   return {
-    props:{
+    props: {
       events: filteredEvents,
       date: {
         year: numYear,
         month: numMonth,
-      }
-    }
+      },
+    },
   };
 }
